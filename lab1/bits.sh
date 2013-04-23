@@ -1,0 +1,2 @@
+make bits
+./bits

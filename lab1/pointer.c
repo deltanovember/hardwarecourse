@@ -1,6 +1,6 @@
 /*
  * CSE 351 HW1 (Data Lab - Pointers)
- *
+ *ttt
  * <Please put your name and userid here>
  *
  * pointer.c - Source file with your solutions to the Lab.
@@ -85,19 +85,12 @@ int intSize() {
   int * intPtr1;
   int * intPtr2;
   // TODO: Write code to compute size of an integer.
-  intArray[0] = &intPtr1;
-  intArray[1] = &intPtr2;
-   printf("%i\n", intArray[0]);
-printf("%i\n", intArray[1]);
-printf("%i\n", sizeof(int));
-  return &intPtr2;
+  intArray[0] = 1;
+  intArray[1] = 2;
+  return (int)&intArray[1] - (int)&intArray[0];
 }
 
-  int main() {
-  int result = intSize();
- 
-   return 0;
-  }
+
 
 /*
  * Return the size of a double in bytes.
@@ -107,9 +100,12 @@ int doubleSize() {
   double * doubPtr1;
   double * doubPtr2;
   // TODO: Write code to compute size of a double.
-
-  return 2;
+  doubArray[0] = 1;
+  doubArray[1] = 1;
+  return (int)&doubArray[1] - (int)&doubArray[0];
 }
+
+
 
 /*
  * Return the size of a pointer in bytes.
@@ -118,10 +114,15 @@ int pointerSize() {
   double * ptrArray[10];
   double ** ptrPtr1;
   double ** ptrPtr2;
+  int test = 10;
+  int test2 = 11;
   // TODO: Write code to compute size of a pointer.
+  ptrArray[0] = &test;
+  ptrArray[1] = &test2;
+  return (int)&ptrArray[1] - (int)&ptrArray[0];
 
-  return 2;
 }
+
 
 /*
  * Modify intArray[5] to be the value 351 using only &intArray and
@@ -133,9 +134,10 @@ int changeValue() {
   int * intPtr2;
   // TODO: Write code to change value of intArray[5] to 351 using only
   //       intPtr1 and the + operator.
-
+  *(intPtr1 + 5) = 351;
   return intArray[5];
 }
+
 
 
 /*
@@ -145,8 +147,9 @@ int changeValue() {
  * Operators / and % and loops are NOT allowed.
  */
 int withinSameBlock(int * ptr1, int * ptr2) {
-  // TODO
-  return 2;
+  int add1 = ((int) ptr1) >> 6;
+  int add2 = ((int) ptr2) >> 6;
+  return add1 == add2;
 }
 
 /*
@@ -154,15 +157,27 @@ int withinSameBlock(int * ptr1, int * ptr2) {
  * 0 otherwise.
  */
 int withinArray(int * intArray, int size, int * ptr) {
-  // TODO
-  return 2;
+  return ((ptr - intArray) < size) && ((ptr - intArray) > 0);
 }
+
+
 /*
  * Return x with the n bits that begin at position p inverted (i.e.,
  * turn 0 into 1 and vice versa) and the rest left unchanged. Consider
  * the indices of x to begin with the low-order bit numbered as 0.
  */
 int invert(int x, int p, int n) {
-  // TODO
-  return 2;
+
+  int mask = (1 << n) + ~0;
+  return x ^ (mask << p);
 }
+/**
+  int main() {
+  int result = withinArray((int *) 0x1, 4, (int *) 0x11);
+   // int result = invert(20, 9, 5);
+ printf("%i\n", result);
+ /**
+
+   return 0;
+  }
+  */

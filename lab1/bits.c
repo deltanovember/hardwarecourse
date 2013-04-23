@@ -149,6 +149,7 @@ int bitXor(int x, int y) {
  *   Rating: 1
  */
 int thirdBits(void) {
+  /**
   int x1 = 1;
   int x2 = x1 << 3;
   int x3 = x2 << 3;
@@ -160,7 +161,12 @@ int thirdBits(void) {
   int x9 = x8 << 3;
   int x10 = x9 << 3;
   int x11 = x10 << 3;
-  return x1+x2+x3+x4+x5+x6+x7+x8+x9+x10+x11;
+  return x1+x2+x3+x4+x5+x6+x7+x8+x9+x10+x11;*/
+  int x = 0x24;  
+  x = x+(x<<6);  
+  x = x+(x<<12);  
+  x = x+(x<<24);  
+  return (x<<1)+1;  
 }
 
 
@@ -192,13 +198,15 @@ int fitsBits(int x, int n) {
  *  Rating: 2
  */
 int sign(int x) {
-  int sign = (x >> 31) & 1;
-  int result =  (((sign << 31) >> 31) & -1) +((((!sign) << 31) >> 31) & 1);
-  return result;
+  int sign = (x >> 31);
+  sign = sign | !!x;
+  return sign;
+ // return (((sign << 31) >> 31) & 1) + ((((!x) << 31) >> 31) & 0);
+  //return sign & (!!x);
+
 }
 
-
-
+  
 
 /* 
  * getByte - Extract byte n from word x
@@ -229,12 +237,12 @@ int getByte(int x, int n) {
  * 10000111011001010100001100100001
  */
 int logicalShift(int x, int n) {
-  /** need to zero initial bits */
-  int allOnes = ~0;
-  int shiftAmount = 33 + ~n;
-  int mask = ~(allOnes << shiftAmount);
-  return mask & (x >> n);
-}
+  int msb = 1 << 31;   
+  int mask = msb >> n;    
+  int mask2 = ~(mask << 1);  
+  x = x >> n;  
+  return x & mask2;  
+}  
 
 
 
@@ -247,8 +255,18 @@ int logicalShift(int x, int n) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
-  return 2;
+ int i = x + y;
+  int j = (x^y);
+  int k = (j & 0) | (~j & (x^i));
+  x =  x >> 31;
+  y =  y >> 31;
+  i =  i >> 31;
+
+  return (k & 0) | (~k & 1);
+
 }
+
+
 // Rating: 4
 /* 
  * bang - Compute !x without using !
@@ -260,6 +278,7 @@ int addOK(int x, int y) {
 int bang(int x) {
 
   /** assume x is 0 i.e. 0...0 */
+  /**
   // flip 1...1
   int allOnes = ~x;
 
@@ -269,6 +288,10 @@ int bang(int x) {
   // flip i.e. 0000....1
   int isZero = ~lsbZero;
   return (((isZero << 31) >> 31) & 1) + ((((!x) << 31) >> 31) & 0);
+  */
+  int transform = x + (~1+1);
+  int x2 = (transform & ~x) >> 31;
+  return 1&x2;
 }
 
 
@@ -283,7 +306,7 @@ int bang(int x) {
  */
 
 int conditional(int x, int y, int z) {
-
+/**
   int allOnes = ~x;
 
   // lsb to zero i.e. 1111....0
@@ -293,8 +316,16 @@ int conditional(int x, int y, int z) {
   int isZero = ~lsbZero;
   int bangResult = (((isZero << 31) >> 31) & 1) + ((((!x) << 31) >> 31) & 0);
   return (((isZero << 31) >> 31) & y) + ((((!x) << 31) >> 31) & z);
+  */
+   int i = !x;
+
+   int j = (~i) + 1;
+    int k = ~j;
+
+  return (z&j)+(y&k);
 
 }
+
 
 
 
@@ -308,17 +339,15 @@ int conditional(int x, int y, int z) {
  *   Rating: 4
  */
 int isPower2(int x) {
+  /**
   int allOnes = x + ~0;
-  return !(x & allOnes);
+  int result = !(x & allOnes);
+  int isZero = !x;
+  return (((isZero << 31) >> 31) & 0) + ((((!isZero) << 31) >> 31) & result);
+  */
+  int i = x+(~1+1);
+int j = !!x^(x>>31 & 1);
+i = i & x;
+return ((!i)& j);
 }
 
-  int main() {
-  int result = isPower2(7);
-  //int result = (130 >> 31) & 1;
- // int result = 0xFF >> 1;
-  //  int result = ~10;
-   // int result = sign(0);
-    //int result = getByte(0x12345678,1);
-  printf("%i\n", result);
-   return 0;
-  }
